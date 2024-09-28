@@ -19,7 +19,7 @@ provider "ibm" {
 
 # Virtual Private Cloud
 resource "ibm_is_vpc" "vpc-instance" {
-  name = "${local.BASENAME}-vpc"
+  name = "${var.basename}-vpc"
 }
 
 ############################
@@ -27,7 +27,7 @@ resource "ibm_is_vpc" "vpc-instance" {
 ############################
 
 resource "ibm_is_security_group" "sg1" {
-  name = "${local.BASENAME}-sg1"
+  name = "${var.basename}-sg1"
   vpc  = ibm_is_vpc.vpc-instance.id
 }
 
@@ -86,9 +86,9 @@ resource "ibm_is_security_group_rule" "allow-egress-all" {
 ############################
 
 resource "ibm_is_subnet" "subnet1" {
-  name                     = "${local.BASENAME}-subnet1"
+  name                     = "${var.basename}-subnet1"
   vpc                      = ibm_is_vpc.vpc-instance.id
-  zone                     = local.ZONE
+  zone                     = var.zone
   total_ipv4_address_count = 256
 }
 
@@ -109,10 +109,10 @@ data "ibm_is_image" "debian" {
 # Virtual Server Insance
 resource "ibm_is_instance" "vsi" {
   count   = var.node_count
-  name    = "${local.BASENAME}-vsi-${count.index}"
+  name    = "${var.basename}-vsi-${count.index}"
   vpc     = ibm_is_vpc.vpc-instance.id
   keys    = [data.ibm_is_ssh_key.ssh_key_id.id]
-  zone    = local.ZONE
+  zone    = var.zone
   image   = data.ibm_is_image.debian.id
   profile = var.scylla_node_profile
 
@@ -126,7 +126,7 @@ resource "ibm_is_instance" "vsi" {
 # Request a foaling ip 
 resource "ibm_is_floating_ip" "fip" {
   count  = var.node_count
-  name   = "${local.BASENAME}-fip-${count.index}"
+  name   = "${var.basename}-fip-${count.index}"
   target = ibm_is_instance.vsi[count.index].primary_network_interface[0].id
 }
 
@@ -136,10 +136,10 @@ resource "ibm_is_floating_ip" "fip" {
 ##########################
 
 resource "ibm_is_instance" "vsi-Manager" {
-  name    = "${local.BASENAME}-manager-vsi1"
+  name    = "${var.basename}-manager-vsi1"
   vpc     = ibm_is_vpc.vpc-instance.id
   keys    = [data.ibm_is_ssh_key.ssh_key_id.id]
-  zone    = local.ZONE
+  zone    = var.zone
   image   = data.ibm_is_image.debian.id
   profile = var.manager_profile
 
@@ -151,6 +151,6 @@ resource "ibm_is_instance" "vsi-Manager" {
 }
 
 resource "ibm_is_floating_ip" "fip1-manager" {
-  name   = "${local.BASENAME}-manager-fip1"
+  name   = "${var.basename}-manager-fip1"
   target = ibm_is_instance.vsi-Manager.primary_network_interface[0].id
 }

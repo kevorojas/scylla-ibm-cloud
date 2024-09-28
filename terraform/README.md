@@ -1,59 +1,52 @@
-## Descripción
+# Terraform IBM Cloud Infrastructure
 
-Este proyecto de Terraform crea una infraestructura de ScyllaDB en IBM Cloud. La infraestructura incluye:
+Este proyecto utiliza Terraform para definir y desplegar infraestructura en IBM Cloud.
 
-- Un clúster de ScyllaDB con el número de nodos especificado.
-- Configuración de perfiles de máquina para los nodos de ScyllaDB y el nodo de gestión.
-- Configuración de claves SSH para acceder a los nodos.
-- Despliegue en la región especificada de IBM Cloud.
+## Estructura del Proyecto
 
-## Prerrequisitos
+```plaintext
+terraform/
+├── main.tf
+├── README.md
+├── terraform.tfvars
+└── variables.tf
+```
+## Archivos Clave
+- main.tf: Define los recursos principales de la infraestructura.
+- variables.tf: Define las variables utilizadas en el proyecto.
+- terraform.tfvars: Contiene los valores de las variables.
+## Variables
+Las siguientes variables deben ser configuradas en el archivo terraform.tfvars:
 
-1. [Terraform](https://www.terraform.io/downloads.html) instalado.
-2. Una cuenta en [IBM Cloud](https://cloud.ibm.com/).
-3. Una clave API de IBM Cloud.
+- ibmcloud_api_key: Tu clave API de IBM Cloud.
+- region: La región donde se desplegarán los recursos.
+- zone: La zona dentro de la región.
+- basename: El nombre base para los recursos.
+- ssh_key_name: El nombre de la clave SSH.
+- node_count: El número de nodos.
+- manager_profile: El perfil del manager.
+- scylla_node_profile: El perfil del nodo ScyllaDB.
 
-## Configuración
-
-1. Clona este repositorio en tu máquina local.
-
-    ```sh
-    git clone <URL_DEL_REPOSITORIO>
-    cd <NOMBRE_DEL_REPOSITORIO>/terraform
-    ```
-
-2. Crea un archivo [`terraform.tfvars`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2FUsers%2Fxirect%2FDocuments%2FPersonal%2FFractalup%2Fscylladb%2Frepo%2Fterraform%2Fterraform.tfvars%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%2C%22f06aa76b-b6fd-49a2-84fb-e4de233c060b%22%5D "/Users/xirect/Documents/Personal/Fractalup/scylladb/repo/terraform/terraform.tfvars") en el directorio [`terraform/`](command:_github.copilot.openRelativePath?%5B%7B%22scheme%22%3A%22file%22%2C%22authority%22%3A%22%22%2C%22path%22%3A%22%2FUsers%2Fxirect%2FDocuments%2FPersonal%2FFractalup%2Fscylladb%2Frepo%2Fterraform%2F%22%2C%22query%22%3A%22%22%2C%22fragment%22%3A%22%22%7D%2C%22f06aa76b-b6fd-49a2-84fb-e4de233c060b%22%5D "/Users/xirect/Documents/Personal/Fractalup/scylladb/repo/terraform/") con el siguiente contenido:
-
-    ```tf
-    ibmcloud_api_key = "your_ibmcloud_api_key"
-    region           = "us-east"
-    ssh_key_name     = "your_ssh_key_name"
-    node_count       = 2
-    manager_profile  = "cx2-2x4"
-    scylla_node_profile = "bx2-2x8"
-    ```
-
+## Ejemplo de terraform.tfvars
+```plaintext
+ibmcloud_api_key = "your_ibmcloud_api_key"
+region           = "your_region"
+zone             = "your_zone"
+basename         = "your-basename"
+ssh_key_name     = "your_ssh_key_name"
+node_count       = 2
+manager_profile  = "cx2-2x4"
+scylla_node_profile = "bx2-2x8"
+```
 ## Despliegue
-
-1. Inicializa el directorio de trabajo de Terraform.
-
-    ```sh
-    terraform init
-    ```
-
-2. Revisa el plan de ejecución para asegurarte de que los recursos se crearán según lo esperado.
-
-    ```sh
-    terraform plan
-    ```
-
-3. Aplica el plan para crear los recursos.
-
-    ```sh
-    terraform apply
-    ```
-
-    Escribe `yes` cuando se te solicite confirmar.
+1. Asegúrate de tener permisos adecuados en tu cuenta de IBM Cloud para crear los recursos necesarios.
+2. Revisa y ajusta los valores en terraform.tfvars según tus necesidades específicas.
+3. Ejecuta los siguientes comandos:
+```sh
+terraform init
+terraform plan
+terraform apply
+```
 
 ## Limpieza
 

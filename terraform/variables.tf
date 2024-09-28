@@ -4,6 +4,10 @@
 
 variable "ibmcloud_api_key" {}
 variable "region" {}
+variable "zone" {}
+variable "basename" {
+  type = string
+}
 variable "ssh_key_name" {
     type = number
 }
