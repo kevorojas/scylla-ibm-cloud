@@ -1,0 +1,58 @@
+# parameters.yml
+
+# swap configuration for the swap role
+swap_file_size_mb: 2048
+
+#RAID
+# scylla_raid_setup: 
+#   - /dev/nvme0n1
+#   - /dev/nvme0n2
+#   - /dev/nvme0n3
+
+# Scylla Manager agent
+scylla_manager_agent_config: |
+  gcs:
+    service_account_file: /etc/scylla/gcs.json
+# scylla_manager_repo_url: http://downloads.scylladb.com/rpm/centos/scylladb-manager-2.1.repo
+scylla_manager_enabled: true
+
+# monitoring configuration
+generate_monitoring_config: true
+
+# Scylla configuration
+scylla_api_port: 10000
+scylla_api_address: 127.0.0.1
+scylla_broadcast_address: "{{ vars['ansible_'~scylla_nic].ipv4.address }}"
+scylla_rpc_address: "0.0.0.0"
+scylla_listen_address: "{{ vars['ansible_'~scylla_nic].ipv4.address }}"
+scylla_broadcast_rpc_address: "{{ vars['ansible_'~scylla_nic].ipv4.address }}"
+scylla_seeds:
+  - p
+enable_mc_format: true
+scylla_io_probe: true
+scylla_snitch: GossipingPropertyFileSnitch
+scylla_edition: oss
+scylla_version: latest
+scylla_dependencies:
+  - curl
+  - wget
+
+elrepo_kernel: true
+
+install_type: online
+scylla_nic: "{{ ansible_default_ipv4.interface }}"
+install_only: false
+scylla_cluster_name: FractalupCluster
+scylla_ssl:
+  cert_path: /etc/scylla/
+  internode:
+    enabled: true
+    internode_encryption: all
+  client:
+    enabled: false
+
+scylla_yaml_params:
+  authorizer: CassandraAuthorizer
+  authenticator: PasswordAuthenticator
+  enable_sstables_mc_format: true
+  internode_compression: all

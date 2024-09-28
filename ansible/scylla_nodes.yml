@@ -1,0 +1,15 @@
+# scylla_nodes.yml
+- name: Scylla node
+  hosts: scylla
+  any_errors_fatal: true
+  tasks:
+    # Workaround for some Debian versions that might not have XFS support out of the box
+    - name: install XFSprogs
+      package:
+        name: xfsprogs
+        state: present
+      become: true
+  roles:
+    # This is a nice working role for setting up swap
+    # - { name: geerlingguy.swap, become: true } 
+    - ansible-scylla-node
